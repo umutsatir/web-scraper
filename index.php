@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: login.html');
+    header('Location: login.php');
     exit;
 }
 ?>
@@ -53,7 +53,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         </header>
         <main>
             <div class="container w-50 justify-content-center">
-                <form action="main-old.php" method="get">
+                <form action="scrape/main-old.php" method="get">
                     <div class="input-group m-3">
                         <label for="sitemapLink" class="input-group-text"
                             >Sitemap Link</label
