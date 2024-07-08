@@ -3,8 +3,9 @@
     session_start();
 
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $email = $_POST['email'] . "@" . $_POST['email-2'];
+
     $db = (new DB())->connect();
 
     $exists = $db->get_results("SELECT * FROM users WHERE username = '{$username}'");
