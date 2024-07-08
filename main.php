@@ -9,6 +9,8 @@ $links = $scraper->get_links($_GET['sitemapLink']);
 $scraper->title_xpath = $_GET['titleXpath'] . "/text()";
 $scraper->article_xpath = $_GET['articleXpath'] . "//text()";
 
+var_dump($scraper->title_xpath);
+
 $maxProcesses = 10;  // Number of active forks you want
 $processes = [];
 
