@@ -2,11 +2,19 @@
     include './scraper.php';
     include './gpt-detector.php';
 
+    $url = $_GET['sitemapLink'];
+    $extension = explode(".", $url);
+    $extension = pathinfo($url, PATHINFO_EXTENSION);
+    if ($extension != 'xml') {
+        echo "Invalid sitemap link. Please provide a valid sitemap link.";
+        exit();
+    }
+    
     $scraper = new Scraper();
     $detector = new GPTDetector();
-    $links = $scraper->get_links('https://creakyjoints.org/post-sitemap.xml');
-    $scraper->title_xpath = "/html/body/div[1]/div/div[1]/div/article/h1/text()";
-    $scraper->article_xpath = "/html/body/div[1]/div/div[1]/div/article/div[2]/div//text()";
+    $links = $scraper->get_links($url);
+    $scraper->title_xpath = $_GET['titleXpath'] . "/text()";
+    $scraper->article_xpath = $_GET['articleXpath'] . "//text()";
     
     foreach ($links as $link) {
         $page = $scraper->get_page($link);
@@ -16,8 +24,9 @@
         if ($status_code == 200) {
             try {
                 $texts = $scraper->get_text($page);
-                $percentage = $detector->get_percentage($texts[1]);
-                echo $percentage . "\n";
+                echo "Title: " . $texts[0] . PHP_EOL;
+                echo "URL: " . $link . PHP_EOL;
+                echo "--------------------------------------" . PHP_EOL;
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage() . ": " . $link .  "\n";
             }

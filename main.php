@@ -3,13 +3,19 @@
 include './scraper.php';
 include './gpt-detector.php';
 
+$url = $_GET['sitemapLink'];
+$extension = explode(".", $url);
+$extension = pathinfo($url, PATHINFO_EXTENSION);
+if ($extension != 'xml') {
+    echo "Invalid sitemap link. Please provide a valid sitemap link.";
+    exit();
+}
+
 $scraper = new Scraper();
 $detector = new GPTDetector();
-$links = $scraper->get_links($_GET['sitemapLink']);
+$links = $scraper->get_links($url);
 $scraper->title_xpath = $_GET['titleXpath'] . "/text()";
 $scraper->article_xpath = $_GET['articleXpath'] . "//text()";
-
-var_dump($scraper->title_xpath);
 
 $maxProcesses = 10;  // Number of active forks you want
 $processes = [];
