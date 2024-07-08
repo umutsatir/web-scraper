@@ -1,0 +1,1 @@
+Your link is: <?php echo $_GET['sitemapLink']; ?>
