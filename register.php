@@ -19,8 +19,7 @@
         echo "Username or email already exists";
         exit;
     }
-
-    $insertion = $db->query("INSERT INTO users (username, password, email) VALUES ('{$username}', '{$password}', '{$email}')");
+    $insertion = $db->query("INSERT INTO users (username, password, email, creationDate) VALUES ('{$username}', '{$password}', '{$email}', now())");
     if ($insertion) {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;

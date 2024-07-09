@@ -45,6 +45,7 @@
             }
             $plain_text = preg_replace("/\r\n|\r|\n/", "", $plain_text);
             $plain_text = preg_replace("/\r\t|\r|\t/", "", $plain_text);
+            $plain_text = preg_replace('/[\'"]/', '', $plain_text); // remove quotes
 
             if ($title->length == 0 || $plain_text == "")
                 throw new Exception("Title or text not found");

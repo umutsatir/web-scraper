@@ -27,20 +27,23 @@ $threshold = intval($_GET['threshold']);
 
 $db = (new DB())->connect();
 
-$db->query("INSERT INTO sitemaps (url) VALUES ('{$url}')");
+$db->query("INSERT INTO sitemaps (url, creationDate) VALUES ('{$url}', now())");
+$sitemap_sql = sprintf("SELECT sitemapId FROM sitemaps WHERE url = '%s'", $url);
+$sitemap_id = intval($db->query($sitemap_sql));
 
 ignore_user_abort(false); // * Close connection when the client disconnects
 
 foreach ($links as $link) {
     try {
-        $sitemap_id = $db->select("sitemaps", "id", ["url" => $link]);
         $page = $scraper->get_page($link);
         $texts = $scraper->get_text($page);
         $result = $detector->get_percentage($texts[1]);
+        $result = round($result, 2);
+        $date = date('Y-m-d');
         if ($result < $threshold) {
-            $db->query("INSERT INTO articles (title, text, gpt_percentage, sitemap_id) VALUES ('{$texts[0]}', '{$texts[1]}', '{$result}', '{$sitemap_id}')");
+            $sql = sprintf("INSERT INTO articles (sitemapId, title, text, gptPercentage, creationDate) VALUES (%d, '%s', '%s', %f, '%s')", $sitemap_id, $texts[0], $texts[1], $result, $date);
+            $db->query($sql);
         }
-        var_dump($texts, $result);
     } catch (Exception $e) {
         echo "Error: " . $e . "\n";
         continue;
