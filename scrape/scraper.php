@@ -40,14 +40,16 @@
             $article = $xpath->query($this->article_xpath);
             $plain_text = '';
             foreach($article as $node) {
-                $plain_text .= $node->nodeValue . ' ';
+                if ($node->nodeValue[0] != '.')
+                    $plain_text .= strip_tags($node->nodeValue) . ' ';
             }
             $plain_text = preg_replace("/\r\n|\r|\n/", "", $plain_text);
             $plain_text = preg_replace("/\r\t|\r|\t/", "", $plain_text);
-            if ($title->length == 0 || $article->length == 0) {
-                throw new Exception("Title or article not found");
-            }
-            return [$title->item(0)->nodeValue, $plain_text];
+
+            if ($title->length == 0 || $plain_text == "")
+                throw new Exception("Title or text not found");
+
+            return [$title[0]->nodeValue, $plain_text];
         }
     }
 ?>

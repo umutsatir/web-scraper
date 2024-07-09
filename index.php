@@ -52,8 +52,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </nav>
         </header>
         <main>
+            <div class="container d-flex justify-content-center mt-5">
+                <h1>Scraper Tool</h1>
+            </div>
             <div class="container w-50 justify-content-center">
-                <form action="scrape/main-old.php" method="get">
+                <form action="./scrape/main.php" method="get">
                     <div class="input-group m-3">
                         <label for="sitemapLink" class="input-group-text"
                             >Sitemap Link</label
@@ -88,10 +91,23 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                             required
                         />
                     </div>
+                    <div class="input-group m-3">
+                        <label for="threshold" class="form-label">GPT Threshold</label>
+                        <input type="range" class="form-range" min="0" max="100" name="threshold">
+                        <p id="thresholdValue"></p>
+                    </div>
                     <input type="submit" class="btn btn-primary mx-3" />
                 </form>
             </div>
         </main>
+        <script>
+            var text = document.getElementById('thresholdValue');
+            var threshold = document.querySelector('.form-range');
+            text.innerText = threshold.valueAsNumber + "%"; 
+            threshold.addEventListener('change', () => { 
+                text.innerText = threshold.valueAsNumber + "%"; 
+            }) 
+        </script> 
         <footer>
             <!-- place footer here -->
         </footer>

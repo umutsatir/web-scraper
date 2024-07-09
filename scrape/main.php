@@ -1,7 +1,11 @@
 <?php
+header('Content-Type: text/event-stream');
+header('Cache-Control: no-cache');
+header('Connection: keep-alive');
 
 include './scraper.php';
 include './gpt-detector.php';
+include '../db.php';
 
 $url = $_GET['sitemapLink'];
 $extension = explode(".", $url);
@@ -14,66 +18,35 @@ if ($extension != 'xml') {
 $scraper = new Scraper();
 $detector = new GPTDetector();
 $links = $scraper->get_links($url);
-$scraper->title_xpath = $_GET['titleXpath'] . "/text()";
-$scraper->article_xpath = $_GET['articleXpath'] . "//text()";
+$scraper->title_xpath = $_GET['titleXPath'] . "/text()";
+$scraper->article_xpath = $_GET['textXPath'] . "//text()";
 
-$maxProcesses = 10;  // Number of active forks you want
-$processes = [];
+$totalLinks = count($links);
+$processedLinks = 0;
+$threshold = intval($_GET['threshold']);
 
-// Function to fork a process
-function fork_process($link) {
-    global $scraper, $detector;
-    $pid = pcntl_fork();
-    if ($pid == -1) {
-        die('Could not fork');
-    } elseif ($pid) {
-        // Parent process
-        return $pid;
-    } else {
-        // Child process
-        try {
-            $page = $scraper->get_page($link);
-            $texts = $scraper->get_text($page);
-            $result = $detector->get_percentage($texts[1]);
-            echo "Title: " . $texts[0] . PHP_EOL;
-            echo "URL: " . $link . PHP_EOL;
-            echo "GPT Percentage: " . $result . PHP_EOL;
-            echo "--------------------------------------" . PHP_EOL;
-        } catch (Exception $e) {
-            echo "Error processing link: " . $e . PHP_EOL;
-            exit(1); // Terminate the child process after finishing its work
+$db = (new DB())->connect();
+
+$db->query("INSERT INTO sitemaps (url) VALUES ('{$url}')");
+
+ignore_user_abort(false); // * Close connection when the client disconnects
+
+foreach ($links as $link) {
+    try {
+        $sitemap_id = $db->select("sitemaps", "id", ["url" => $link]);
+        $page = $scraper->get_page($link);
+        $texts = $scraper->get_text($page);
+        $result = $detector->get_percentage($texts[1]);
+        if ($result < $threshold) {
+            $db->query("INSERT INTO articles (title, text, gpt_percentage, sitemap_id) VALUES ('{$texts[0]}', '{$texts[1]}', '{$result}', '{$sitemap_id}')");
         }
-        exit(1); // Terminate the child process after finishing its work
+        var_dump($texts, $result);
+    } catch (Exception $e) {
+        echo "Error: " . $e . "\n";
+        continue;
     }
-}
 
-// Start initial forks
-for ($i = 0; $i < $maxProcesses && !empty($links); ++$i) {
-    $link = array_pop($links);
-    $pid = fork_process($link);
-    $processes[$pid] = $link;
+    $processedLinks++;
+    $progress = ($processedLinks / $totalLinks) * 100;
 }
-
-// Monitor and refill forks
-while (!empty($links) || !empty($processes)) {
-    foreach ($processes as $pid => $link) {
-        $status = null;
-        $res = pcntl_waitpid($pid, $status, WNOHANG);
-        if ($res == -1 || $res > 0) {
-            // Process finished
-            unset($processes[$pid]);
-            if (!empty($links)) {
-                $link = array_pop($links);
-                $new_pid = fork_process($link);
-                $processes[$new_pid] = $link;
-            }
-        }
-    }
-    usleep(100000); // Sleep for a short time to avoid busy-waiting
-}
-
-foreach ($processes as $pid) {
-    pcntl_waitpid($pid, $status);
-}
-
-echo "All links processed." . PHP_EOL;
+?>

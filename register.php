@@ -13,13 +13,14 @@
 
     $db = (new DB())->connect();
 
-    $exists = $db->select("users", "*", ["username" => $username]);
-    if ($exists) {
-        echo "Username already exists";
+    $usernameExists = $db->select("users", "*", ["username" => $username]);
+    $emailExists = $db->select("users", "*", ["email" => $email]);
+    if ($usernameExists || $emailExists) {
+        echo "Username or email already exists";
         exit;
     }
 
-    $insertion = $db->insert("users", ["username" => $username, "password" => $password, "email" => $email]);
+    $insertion = $db->query("INSERT INTO users (username, password, email) VALUES ('{$username}', '{$password}', '{$email}')");
     if ($insertion) {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;
