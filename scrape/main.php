@@ -34,11 +34,13 @@ $userId = $db->get_var("SELECT userId FROM users WHERE username = '{$username}'"
 $db->query("INSERT INTO sitemaps (userId, url, creationDate) VALUES ($userId, '{$url}', now())");
 $sitemap_sql = sprintf("SELECT * FROM sitemaps WHERE url = '%s' ORDER BY sitemapId DESC", $url);
 $sitemap_id = $db->get_results($sitemap_sql)[0]->sitemapId;
-
-ignore_user_abort(false); // * Close connection when the client disconnects
+$db->query("INSERT INTO cronjobs (userId, sitemapId, isActive) VALUES ($userId, $sitemap_id, 1)"); // add cronjob
 
 foreach ($links as $link) {
     try {
+        $isActive = $db->get_var("SELECT isActive FROM cronjobs WHERE userId = $userId AND sitemapId = $sitemap_id");
+        if ($isActive != true) // if user logged out, exit
+            exit();
         $page = $scraper->get_page($link);
         $texts = $scraper->get_text($page);
         $result = $detector->get_percentage($texts[1]);
@@ -56,4 +58,6 @@ foreach ($links as $link) {
     $processedLinks++;
     $progress = ($processedLinks / $totalLinks) * 100;
 }
+
+$db->query("UPDATE cronjobs SET isActive = 0 WHERE userId = $userId AND sitemapId = $sitemap_id"); // deactivate cronjob
 ?>

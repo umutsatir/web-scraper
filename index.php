@@ -40,7 +40,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Scraper</a>
+                            <a class="nav-link active" aria-current="page" href="#">Scraper</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="scrapings.php">My Scrapings</a>
                         </li>
                     </ul>
                         <form action="logout.php">
