@@ -2,6 +2,7 @@
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 header('Connection: keep-alive');
+session_start();
 
 include './scraper.php';
 include './gpt-detector.php';
@@ -27,9 +28,12 @@ $threshold = intval($_GET['threshold']);
 
 $db = (new DB())->connect();
 
-$db->query("INSERT INTO sitemaps (url, creationDate) VALUES ('{$url}', now())");
-$sitemap_sql = sprintf("SELECT sitemapId FROM sitemaps WHERE url = '%s'", $url);
-$sitemap_id = intval($db->query($sitemap_sql));
+$username = $_SESSION['username'];
+$userId = $db->get_var("SELECT userId FROM users WHERE username = '{$username}'");
+
+$db->query("INSERT INTO sitemaps (userId, url, creationDate) VALUES ($userId, '{$url}', now())");
+$sitemap_sql = sprintf("SELECT * FROM sitemaps WHERE url = '%s' ORDER BY sitemapId DESC", $url);
+$sitemap_id = $db->get_results($sitemap_sql)[0]->sitemapId;
 
 ignore_user_abort(false); // * Close connection when the client disconnects
 
