@@ -65,64 +65,41 @@ function deactivateJob($sitemapId, $userId) {
         </header>
         <main>
             <div class="container w-50 justify-content-center">
-                <div class="container d-flex justify-content-center mt-5">
-                    <h1>Active Scrapings</h1>
+                <div class="container d-flex justify-content-center mt-5 mb-4">
+                    <h1>My Scrapings</h1>
                 </div>
-                <table class="table table-striped">
+                <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">Sitemap ID</th>
                             <th scope="col">URL</th>
                             <th scope="col">Creation Date</th>
-                            <th scope="col">Deactivate</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                            $sql = sprintf("SELECT * FROM sitemaps WHERE userId = %d", $userId);
-                            $sitemaps = $db->get_results($sql);
-                            foreach ($sitemaps as $sitemap) {
-                                $isActive = $db->get_var("SELECT isActive FROM cronjobs WHERE userId = $userId AND sitemapId = $sitemap->sitemapId");
-                                if ($isActive == true) {
-                                    echo "<tr>";
-                                    echo "<td>{$sitemap->sitemapId}</td>";
-                                    echo "<td>{$sitemap->url}</td>";
-                                    echo "<td>{$sitemap->creationDate}</td>";
-                                    echo "<td><button class='btn btn-primary' onclick='<?php deactivateJob({$sitemapId}, {$userId}) ?>'>Deactivate</button></td>";
-                                    echo "</tr>";
-                                }
-                            }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="container w-50 justify-content-center">
-                <div class="container d-flex justify-content-center mt-5">
-                    <h1>Done Scrapings</h1>
-                </div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Sitemap ID</th>
-                            <th scope="col">URL</th>
-                            <th scope="col">Creation Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            $sql = sprintf("SELECT * FROM sitemaps WHERE userId = %d", $userId);
-                            $sitemaps = $db->get_results($sql);
-                            foreach ($sitemaps as $sitemap) {
-                                $isActive = $db->get_var("SELECT isActive FROM cronjobs WHERE userId = $userId AND sitemapId = $sitemap->sitemapId");
-                                if ($isActive == false) {
-                                    echo "<tr>";
-                                    echo "<td>{$sitemap->sitemapId}</td>";
-                                    echo "<td>{$sitemap->url}</td>";
-                                    echo "<td>{$sitemap->creationDate}</td>";
-                                    echo "</tr>";
-                                }
-                            }
-                        ?>
+                        <?php $sitemaps = $db->get_results("SELECT * FROM sitemaps WHERE userId = $userId"); ?>
+                        <?php foreach ($sitemaps as $sitemap): ?>
+                            <tr>
+                                <td><?php echo $sitemap->sitemapId; ?></td>
+                                <td><?php echo $sitemap->url; ?></td>
+                                <td><?php echo $sitemap->creationDate; ?></td>
+                                <td><?php 
+                                    $totalLinks = $db->get_results("SELECT * FROM links WHERE status = 0 AND sitemapId = $sitemap->sitemapId");
+                                    if (!isset($totalLinks)) {
+                                        echo "Completed";
+                                    } else {
+                                        echo "In Progress";
+                                    }
+                                ?></td>
+                                <td>
+                                    <a href="view.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
+                                    <a href="delete.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-danger"><ion-icon name="trash-outline"></ion-icon></a>
+                                    <a href="deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-warning"><ion-icon name="stop-circle-outline"></ion-icon></a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -142,5 +119,7 @@ function deactivateJob($sitemapId, $userId) {
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     </body>
 </html>

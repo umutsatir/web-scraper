@@ -101,6 +101,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     </div>
                     <input type="submit" class="btn btn-primary mx-3" />
                 </form>
+                <?php if (isset($_GET['result'])) { ?>
+                    <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'success' : 'danger'; ?> m-3" role="alert">
+                        <?php echo $_GET['result'] == 'success' ? 'Sitemap has been successfully added to the scraping queue. You can check the results in the <a href="./scrapings.php">"My Scrapings"</a> tab.' : 'An error occurred. Please try again later.'; ?>
+                    </div>
+                <?php } ?>
             </div>
         </main>
         <script>

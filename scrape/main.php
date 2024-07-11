@@ -8,56 +8,55 @@ include './scraper.php';
 include './gpt-detector.php';
 include '../db.php';
 
-$url = $_GET['sitemapLink'];
-$extension = explode(".", $url);
-$extension = pathinfo($url, PATHINFO_EXTENSION);
-if ($extension != 'xml') {
-    echo "Invalid sitemap link. Please provide a valid sitemap link.";
-    exit();
-}
-
-$scraper = new Scraper();
-$detector = new GPTDetector();
-$links = $scraper->get_links($url);
-$scraper->title_xpath = $_GET['titleXPath'] . "/text()";
-$scraper->article_xpath = $_GET['textXPath'] . "//text()";
-
-$totalLinks = count($links);
-$processedLinks = 0;
-$threshold = intval($_GET['threshold']);
-
-$db = (new DB())->connect();
-
-$username = $_SESSION['username'];
-$userId = $db->get_var("SELECT userId FROM users WHERE username = '{$username}'");
-
-$db->query("INSERT INTO sitemaps (userId, url, creationDate) VALUES ($userId, '{$url}', now())");
-$sitemap_sql = sprintf("SELECT * FROM sitemaps WHERE url = '%s' ORDER BY sitemapId DESC", $url);
-$sitemap_id = $db->get_results($sitemap_sql)[0]->sitemapId;
-$db->query("INSERT INTO cronjobs (userId, sitemapId, isActive) VALUES ($userId, $sitemap_id, 1)"); // add cronjob
-
-foreach ($links as $link) {
-    try {
-        $isActive = $db->get_var("SELECT isActive FROM cronjobs WHERE userId = $userId AND sitemapId = $sitemap_id");
-        if ($isActive != true) // if user logged out, exit
-            exit();
-        $page = $scraper->get_page($link);
-        $texts = $scraper->get_text($page);
-        $result = $detector->get_percentage($texts[1]);
-        $result = round($result, 2);
-        $date = date('Y-m-d');
-        if ($result < $threshold) {
-            $sql = sprintf("INSERT INTO articles (sitemapId, title, text, gptPercentage, creationDate) VALUES (%d, '%s', '%s', %f, '%s')", $sitemap_id, $texts[0], $texts[1], $result, $date);
-            $db->query($sql);
-        }
-    } catch (Exception $e) {
-        echo "Error: " . $e . "\n";
-        continue;
+try {
+    $url = $_GET['sitemapLink'];
+    $extension = explode(".", $url);
+    $extension = pathinfo($url, PATHINFO_EXTENSION);
+    if ($extension != 'xml') {
+        echo "Invalid sitemap link. Please provide a valid sitemap link.";
+        exit();
     }
 
-    $processedLinks++;
-    $progress = ($processedLinks / $totalLinks) * 100;
+    $scraper = new Scraper();
+    $detector = new GPTDetector();
+    $links = $scraper->get_links($url);
+    $title_xpath = $_GET['titleXPath'] . "/text()";
+    $article_xpath = $_GET['textXPath'] . "//text()";
+
+    $threshold = intval($_GET['threshold']);
+
+    $db = (new DB())->connect();
+
+    $username = $_SESSION['username'];
+    $userId = $db->get_var("SELECT userId FROM users WHERE username = '{$username}'");
+
+    $db->query("INSERT INTO sitemaps (userId, url, titleXPath, textXPath, threshold, creationDate) VALUES ($userId, '{$url}', '{$title_xpath}', '{$article_xpath}', $threshold, now())");
+    $sitemap_sql = sprintf("SELECT * FROM sitemaps WHERE url = '%s' ORDER BY sitemapId DESC", $url);
+    $sitemap_id = $db->get_results($sitemap_sql)[0]->sitemapId;
+
+    foreach ($links as $link) {
+        $db->query("INSERT INTO links (sitemapId, url, status) VALUES ($sitemap_id, '{$link}', 0)");
+    }
+    header("Location: ../index.php?result=success");
+} catch (Exception $e) {
+    header("Location: ../index.php?result=error");
+    $db->query("DELETE FROM sitemaps WHERE sitemapId = $sitemap_id");
+    $db->query("DELETE FROM links WHERE sitemapId = $sitemap_id");
 }
 
-$db->query("UPDATE cronjobs SET isActive = 0 WHERE userId = $userId AND sitemapId = $sitemap_id"); // deactivate cronjob
+// try {
+//     $path = realpath(__DIR__) . "/cron.php";
+//     $cronJob = sprintf("* * * * * php %s %d %d '%s' '%s' %d > /dev/null 2>&1 &", $path, $userId, $sitemap_id, $title_xpath, $article_xpath, $threshold);
+//     $output = [];
+//     exec("crontab -l", $output);
+//     $output[] = $cronJob;
+//     $newCronTab = implode("\n", $output) . "\n";
+//     file_put_contents('/tmp/crontab.txt', $newCronTab);
+
+//     // !! this needs admin permissions
+//     exec("crontab /tmp/crontab.txt");
+//     header("Location: ../index.php?result=success");
+// } catch (Exception $e) {
+
+// }
 ?>
