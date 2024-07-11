@@ -1,16 +1,22 @@
 <?php
-session_start();
-include './db.php';
-$db = (new DB())->connect();
-$username = $_SESSION['username'];
-$userId = $db->get_var("SELECT userId FROM users WHERE username = '{$username}'");
+    session_start();
+    include './db.php';
 
-// Check if the user is logged in
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: login.php');
-    exit;
-}
+    // Check if the user is logged in
+    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+        header('Location: login.php');
+        exit;
+    }
+
+    $sitemapId = $_GET['sitemapId'];
+
+    $db = (new DB())->connect();
+
+    $perPage = 25;
+    $page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+    $startAt = $perPage * ($page - 1);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +53,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                             <a class="nav-link" aria-current="page" href="index.php">Scraper</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">My Scrapings</a>
+                            <a class="nav-link" aria-current="page" href="scrapings.php">My Scrapings</a>
                         </li>
                     </ul>
                         <form action="logout.php">
@@ -59,58 +65,80 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </nav>
         </header>
         <main>
-            <div class="container w-50 justify-content-center">
+            <div class="container w-75 justify-content-center">
                 <?php if (isset($_GET['result'])) { ?>
                     <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'warning' : 'danger'; ?> m-3" role="alert">
                         <?php 
                             if ($_GET['result'] == 'success') {
                                 $process = $_GET['process'];
-                                $sitemapId = $_GET['sitemapId'];
-                                echo "Sitemap " . $sitemapId . " has been successfully " . $process . "d.";
+                                echo "Article " . $_GET['article_id'] . " has been successfully " . $process . "d.";
                             } else {
-                                echo "An error occurred, please try again later.";
+                                echo "An error occurred. Please try again.";
                             }
                         ?>
                     </div>
                 <?php } ?>
                 <div class="container d-flex justify-content-center mt-5 mb-4">
-                    <h1>My Scrapings</h1>
+                    <h1>Sitemap ID <?php echo $sitemapId; ?></h1>
                 </div>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Sitemap ID</th>
-                            <th scope="col">URL</th>
-                            <th scope="col">Creation Date</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Article ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Article</th>
+                            <th scope="col">GPT Percentage</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $sitemaps = $db->get_results("SELECT * FROM sitemaps WHERE userId = $userId"); ?>
-                        <?php foreach ($sitemaps as $sitemap): ?>
+                        <?php 
+                            $articles = $db->get_results("SELECT * from articles WHERE sitemapId = $sitemapId");
+                            $articleCount = count($articles);
+                            $articles = array_slice($articles, $startAt, $perPage);
+                        ?>
+                        <?php foreach ($articles as $article): ?>
                             <tr>
-                                <td><?php echo $sitemap->sitemapId; ?></td>
-                                <td><?php echo $sitemap->url; ?></td>
-                                <td><?php echo $sitemap->creationDate; ?></td>
-                                <td><?php 
-                                    $totalLinks = $db->get_results("SELECT * FROM links WHERE status = 0 AND sitemapId = $sitemap->sitemapId");
-                                    if (!isset($totalLinks)) {
-                                        echo "Completed";
-                                    } else {
-                                        echo "In Progress";
-                                    }
-                                ?></td>
+                                <td><?php echo $article->id; ?></td>
+                                <td><?php echo $article->title; ?></td>
+                                <td><?php echo mb_strimwidth($article->text, 0, 250, "..."); ?></td>
+                                <td><?php echo $article->gptPercentage; ?></td>
                                 <td>
                                     <div class="container d-flex flex-column gap-1">
-                                        <a href="view.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
-                                        <a href="deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-warning"><ion-icon name="stop-circle-outline"></ion-icon></a>
+                                        <a href="view-article.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
+                                        <a href="delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger"><ion-icon name="trash-outline"></ion-icon></a>
                                     </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+            <div class="container w-75 justify-content-center">
+                <nav aria-label="Article navigation">
+                    <ul class="pagination table-responsive">
+                        <li class="page-item">
+                            <?php if ($page > 1) { ?>
+                                <a class="page-link" href="view.php?sitemapId=<?php echo $sitemapId . "&page=" . $page - 1; ?>">Previous</a>
+                            <?php } else { ?>
+                                <a class="page-link disabled">Previous</a>
+                            <?php } ?>
+                        </li>
+                        <?php
+                            for ($i = 1; $i <= ceil($articleCount / $perPage); $i++) {
+                                $activeTag = ($i == $page) ? 'active' : '';
+                                echo '<li class="page-item ' . $activeTag . '"><a class="page-link" href="view.php?sitemapId=' . $sitemapId . '&page=' . $i . '">' . $i . '</a></li>';
+                            }
+                        ?>
+                        <li class="page-item">
+                        <?php if ($page < ceil($articleCount / $perPage)) { ?>
+                            <a class="page-link" href="view.php?sitemapId=<?php echo $sitemapId . "&page=" . $page + 1; ?>">Next</a>
+                        <?php } else { ?>
+                            <a class="page-link disabled">Next</a>
+                        <?php } ?>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </main>
         <footer>
