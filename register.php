@@ -1,5 +1,6 @@
 <?php
     include './db.php';
+    include './pdo.php';
     session_start();
 
     $username = $_POST['username'];
@@ -12,6 +13,7 @@
     }
 
     $db = (new DB())->connect();
+    $pdo = (new PDOClass())->connect();
 
     $usernameExists = $db->select("users", "*", ["username" => $username]);
     $emailExists = $db->select("users", "*", ["email" => $email]);
@@ -19,7 +21,8 @@
         echo "Username or email already exists";
         exit;
     }
-    $insertion = $db->query("INSERT INTO users (username, password, email, creationDate) VALUES ('{$username}', '{$password}', '{$email}', now())");
+    $insertion = $pdo->prepare("INSERT INTO users (username, password, email, creationDate) VALUES (:username, :password, :email, now())");
+    $insertion->execute(['username' => $username, 'password' => $password, 'email' => $email]);
     if ($insertion) {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;

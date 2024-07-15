@@ -93,7 +93,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                                 <td><?php echo $sitemap->sitemapId; ?></td>
                                 <td><?php echo $sitemap->url; ?></td>
                                 <td><?php echo $sitemap->creationDate; ?></td>
-                                <td><?php 
+                                <td><?php
                                     $totalLinks = $db->get_results("SELECT * FROM links WHERE status = 0 AND sitemapId = $sitemap->sitemapId");
                                     if (!isset($totalLinks)) {
                                         echo "Completed";

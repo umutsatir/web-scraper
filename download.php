@@ -1,11 +1,9 @@
 <?php
     include './db.php';
     session_start();
-    // ini_set('display_errors', 1);
-    // error_reporting(E_ALL);
-    // !!! unable to create file txt, fix it
+
     $db = (new DB())->connect();
-    
+
     try {
         $directory = __DIR__ . '/downloaded-files/';
         $sitemapId = $_GET['sitemapId'];
