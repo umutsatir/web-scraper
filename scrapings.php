@@ -59,7 +59,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </nav>
         </header>
         <main>
-            <div class="container w-50 justify-content-center">
+            <div class="container w-75 justify-content-center">
                 <?php if (isset($_GET['result'])) { ?>
                     <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'warning' : 'danger'; ?> m-3" role="alert">
                         <?php 
@@ -102,9 +102,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                                     }
                                 ?></td>
                                 <td>
-                                    <div class="container d-flex flex-column gap-1">
+                                    <div class="container d-flex gap-1">
                                         <a href="view.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
                                         <a href="deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-warning"><ion-icon name="stop-circle-outline"></ion-icon></a>
+                                        <a href="download.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-success"><ion-icon name="download-outline"></ion-icon></a>
                                     </div>
                                 </td>
                             </tr>
