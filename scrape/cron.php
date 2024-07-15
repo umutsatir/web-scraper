@@ -1,11 +1,10 @@
 <?php
-include 'db.php';
-include 'pdo.php';
+include '../db.php';
+include '../pdo.php';
 include 'scraper.php';
 include 'gpt-detector.php';
-include '/Applications/XAMPP/xamppfiles/htdocs/web-scraper/db.php';
 
-$cronThresholdPerPerson = 100;
+$cronThreshold = 100;
 
 $sitemapId = $argv[1];
 $detector = new GPTDetector();
@@ -13,23 +12,21 @@ $scraper = new Scraper();
 $db = (new DB())->connect();
 $pdo = (new PDOClass())->connect();
 
-$activeJobs = $db->get_results("SELECT * FROM cronjobs WHERE isActive = 1");
+$activeJobs = $db->get_results("SELECT * FROM links WHERE status = 2");
 if (isset($activeJobs) && count($activeJobs) >= $cronThreshold) {
     exit();
 }
 
-$insertCronjob = $pdo->prepare("INSERT INTO cronjobs (sitemapId, isActive) VALUES (:sitemapId, 1)");
-$insertCronjob->execute(['sitemapId' => $sitemapId]);
-
 do {
     try {
-        $query = $db->get_results("SELECT * FROM links WHERE sitemapId = $sitemapId AND status = 0");
+        $query = $db->get_results("SELECT * FROM links WHERE status = 0");
         if (!isset($query) || count($query) == 0) {
             $url = null;
             break;
         }
         $url = $query[0]->url;
-        $pdo->prepare("UPDATE links SET status = 1 WHERE url = :url AND sitemapId = :sitemapId")->execute(['url' => $url, 'sitemapId' => $sitemapId]);
+        $sitemapId = $query[0]->sitemapId;
+        $pdo->prepare("UPDATE links SET status = 2 WHERE url = :url AND sitemapId = :sitemapId")->execute(['url' => $url, 'sitemapId' => $sitemapId]);
 
         $sitemap = $db->get_row("SELECT * FROM sitemaps WHERE sitemapId = $sitemapId");
         $scraper->title_xpath = $sitemap->titleXPath;
@@ -43,10 +40,9 @@ do {
             $createArticle = $pdo->prepare("INSERT INTO articles (sitemapId, title, text, gptPercentage, creationDate) VALUES (:sitemapId, :title, :text, :gptPercentage, :creationDate)");
             $createArticle->execute(['sitemapId' => $sitemapId, 'title' => $texts[0], 'text' => $texts[1], 'gptPercentage' => $result, 'creationDate' => $date]);
         }
+        $pdo->prepare("UPDATE links SET status = 1 WHERE url = :url AND sitemapId = :sitemapId")->execute(['url' => $url, 'sitemapId' => $sitemapId]);
     } catch (Exception $e) {
         $pdo->prepare("UPDATE links SET status = -1 WHERE url = :url AND sitemapId = :sitemapId")->execute(['url' => $url, 'sitemapId' => $sitemapId]);
     }
 } while ($url != null);
-
-$pdo->prepare("UPDATE cronjobs SET isActive = 0 WHERE sitemapId = :sitemapId")->execute(['sitemapId' => $sitemapId]);
 ?>

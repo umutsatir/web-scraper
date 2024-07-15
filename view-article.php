@@ -65,15 +65,33 @@
         </header>
         <main>
             <div class="container w-50 d-flex flex-column justify-content-center gap-4 mb-5">
-                <div class="container d-flex justify-content-center mt-5 mb-4">
+                <?php if (isset($_GET['result'])) { ?>
+                    <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'warning' : 'danger'; ?> m-3" role="alert">
+                        <?php 
+                            if ($_GET['result'] == 'success') {
+                                $process = $_GET['process'];
+                                echo "Article " . $_GET['article_id'] . " has been successfully " . $process . "d.";
+                            } else {
+                                echo "An error occurred. Please try again.";
+                            }
+                        ?>
+                    </div>
+                <?php } ?>
+                <div class="container d-flex justify-content-center my-4">
                     <h1>Article <?php echo $id; ?></h1>
                 </div>
-                <?php
-                    $article = $db->get_results("SELECT * FROM articles WHERE id = $id")[0];
-                    echo "<h2>{$article->title}</h2>";
-                    echo "<p>{$article->text}</p>";
-                ?>
-                <a href="delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger w-25"><ion-icon name="trash-outline"></ion-icon></a>
+                <form action="update.php" method="post" class="d-flex flex-column justify-content-center gap-4">
+                    <input type="hidden" name="article_id" value="<?php echo $id; ?>">
+                    <?php
+                        $article = $db->get_results("SELECT * FROM articles WHERE id = $id")[0];
+                        echo "<h2>{$article->title}</h2>";
+                        echo "<textarea name='text' rows='30'>{$article->text}</textarea>";
+                    ?>
+                    <div>
+                    <button type="submit" class="btn btn-warning w-25"><ion-icon name="create-outline"></ion-icon></button>
+                    <a href="delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger w-25"><ion-icon name="trash-outline"></ion-icon></a>
+                    </div>
+                </form>
             </div>
         </main>
         <footer>

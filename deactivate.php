@@ -7,7 +7,7 @@
         $sitemapId = $_GET['sitemapId'];
         $db = (new DB())->connect();
         $pdo = (new PDOClass())->connect();
-        $update = $pdo->prepare("UPDATE status = 1 FROM links WHERE sitemapId = :sitemapId");
+        $update = $pdo->prepare("UPDATE links SET status = -1 WHERE sitemapId = :sitemapId");
         $update->execute(['sitemapId' => $sitemapId]);
         header('Location: scrapings.php?result=success&sitemapId=' . $sitemapId . '&process=deactivate');
     } catch (Exception $e) {

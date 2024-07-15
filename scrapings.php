@@ -104,7 +104,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                                 <td>
                                     <div class="container d-flex gap-1">
                                         <a href="view.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
-                                        <a href="deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-warning"><ion-icon name="stop-circle-outline"></ion-icon></a>
+                                        <a href="deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-danger"><ion-icon name="stop-circle-outline"></ion-icon></a>
                                         <a href="download.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-success"><ion-icon name="download-outline"></ion-icon></a>
                                     </div>
                                 </td>
