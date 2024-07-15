@@ -18,7 +18,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="./style.css" />
 
         <!-- Bootstrap CSS v5.2.1 -->
         <link
@@ -99,6 +99,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         <input type="range" class="form-range" min="0" max="100" name="threshold">
                         <p id="thresholdValue"></p>
                     </div>
+                    <div class="m-3 w-100">
+                        <label for="tag-input1" class="form-label">Filters (if not, leave blank)</label>
+                        <input type="text" id="tag-input1" name="filters" class="w-100">
+                    </div>
                     <input type="submit" class="btn btn-primary mx-3" />
                 </form>
                 <?php if (isset($_GET['result'])) { ?>
@@ -114,8 +118,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             text.innerText = threshold.valueAsNumber + "%"; 
             threshold.addEventListener('change', () => { 
                 text.innerText = threshold.valueAsNumber + "%"; 
-            }) 
-        </script> 
+            });
+        </script>
         <footer>
             <!-- place footer here -->
         </footer>
@@ -131,5 +135,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+
+        <script src="./bootstrap-tagsinput.js"></script>
     </body>
 </html>

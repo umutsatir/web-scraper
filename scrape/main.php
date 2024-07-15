@@ -20,10 +20,18 @@ try {
 
     $scraper = new Scraper();
     $detector = new GPTDetector();
-    $links = $scraper->get_links($url);
     $title_xpath = $_GET['titleXPath'] . "/text()";
     $article_xpath = $_GET['textXPath'] . "//text()";
-
+    
+    if(isset($_GET['filters'])) {
+        $filters = explode(",", $_GET['filters']);
+        $filters = array_map('trim', $filters);
+        $filters = array_map('strtolower', $filters);
+        $links = $scraper->filter_links($scraper->get_links($url), $filters);
+    } else {
+        $links = $scraper->get_links($url);
+    }
+    
     $threshold = intval($_GET['threshold']);
 
     $db = (new DB())->connect();
@@ -42,6 +50,7 @@ try {
         $insertLinks = $pdo->prepare("INSERT INTO links (sitemapId, url, status) VALUES (:sitemapId, :link, 0)");
         $insertLinks->execute(['sitemapId' => $sitemap_id, 'link' => $link]);
     }
+
     header("Location: ../index.php?result=success");
 } catch (Exception $e) {
     header("Location: ../index.php?result=error");

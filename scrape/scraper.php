@@ -12,6 +12,23 @@
             return $all_matches;
         }
 
+        public function filter_links($links, $filters) {
+            $filtered_links = [];
+            foreach ($links as $link) {
+                $filtered = true;
+                foreach ($filters as $filter) {
+                    if (strpos($link, $filter) !== false) {
+                        $filtered = false;
+                        break;
+                    }
+                }
+                if ($filtered) {
+                    array_push($filtered_links, $link);
+                }
+            }
+            return $filtered_links;
+        }
+
         public function get_page($url) {
             $options = [
                 'http' => [
