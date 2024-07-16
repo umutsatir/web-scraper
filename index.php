@@ -12,8 +12,8 @@ if (!isset($_SESSION['last_submission'])) {
     $_SESSION['submission_count'] = 0;
 }
 
-$submission_interval = 60; // 60 seconds
-$submission_limit = 5; // limit to 5 submissions per interval
+$submission_interval = 30;
+$submission_limit = 5;
 
 if (time() - $_SESSION['last_submission'] < $submission_interval) {
     $_SESSION['submission_count']++;
@@ -23,7 +23,7 @@ if (time() - $_SESSION['last_submission'] < $submission_interval) {
 }
 
 if ($_SESSION['submission_count'] > $submission_limit) {
-    die('Rate limit exceeded');
+    die('Rate limit exceeded, wait for ' . ($submission_interval - (time() - $_SESSION['last_submission'])) . ' seconds before submitting again.');
 }
 ?>
 

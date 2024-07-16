@@ -54,10 +54,10 @@ try {
         $insertLinks = $pdo->prepare("INSERT INTO links (sitemapId, url, status) VALUES (:sitemapId, :link, 0)");
         $insertLinks->execute(['sitemapId' => $sitemap_id, 'link' => $link]);
     }
-
     header("Location: ../index.php?result=success");
 } catch (Exception $e) {
     header("Location: ../index.php?result=error");
+    error_log('Error: ' . $e->getMessage(), 3, '../logs/index.log');
 
     $deleteSitemap = $pdo->prepare("DELETE FROM sitemaps WHERE sitemapId = :sitemapId");
     $deleteSitemap->execute(['sitemapId' => $sitemap_id]);

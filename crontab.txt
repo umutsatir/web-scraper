@@ -1,1 +1,1 @@
-* * * * * /usr/local/bin/php /Applications/XAMPP/xamppfiles/htdocs/web-scraper/scrape/cron.php >> /Applications/XAMPP/xamppfiles/htdocs/web-scraper/log/cron.log 2>&1
+* * * * * /usr/local/bin/php /Applications/XAMPP/xamppfiles/htdocs/web-scraper/scrape/cron.php >> /Applications/XAMPP/xamppfiles/htdocs/web-scraper/logs/cron.log 2>&1

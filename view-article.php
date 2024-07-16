@@ -85,7 +85,7 @@
                         ?>
                     </div>
                 <?php } ?>
-                <div class="container d-flex justify-content-center my-4">
+                <div class="container d-flex justify-content-center mb-4 mt-5">
                     <h1 class="site-header">Article <?php echo $id; ?></h1>
                 </div>
                 <form action="update.php" method="post" class="d-flex flex-column justify-content-center gap-4">
@@ -95,7 +95,7 @@
                         echo "<h2 class='article-title'>{$article->title}</h2>";
                     ?>
                     <div class="form-floating">
-                        <textarea class="form-control" name="text" style="height: 600px"><?php echo $article->text; ?></textarea>
+                        <textarea class="form-control" name="text" style="height: 80vh"><?php echo $article->text; ?></textarea>
                         <label for="text">Article</label>
                     </div>
                     <div>

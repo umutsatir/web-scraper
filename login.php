@@ -17,5 +17,6 @@
         header('Location: index.php');
     } else {
         echo 'Invalid username or password';
+        error_log('Error: ' . $e->getMessage(), 3, 'logs/login.log');
     }
 ?>
