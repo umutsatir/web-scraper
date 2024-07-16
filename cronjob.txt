@@ -1,1 +1,0 @@
-* * * * * php ./scrape/cron.php

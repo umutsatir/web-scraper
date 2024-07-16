@@ -27,7 +27,7 @@ try {
     $title_xpath = $_GET['titleXPath'] . "/text()";
     $article_xpath = $_GET['textXPath'] . "//text()";
     
-    if(isset($_GET['filters'])) {
+    if($_GET['filters'] != "") {
         $filters = explode(",", $_GET['filters']);
         $filters = array_map('trim', $filters);
         $filters = array_map('strtolower', $filters);

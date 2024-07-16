@@ -1,3 +1,21 @@
+* {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+td {
+    font-size: 14px;
+}
+
+.site-header {
+    font-size: 40px;
+}
+
+.article-title {
+    font-size: 25px;
+}
+
 .loginBtn {
     width: 150px;
 }

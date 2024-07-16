@@ -3,8 +3,6 @@
     include './pdo.php';
     include "gump.class.php";
     session_start();
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
     
     try {
         $gump = new GUMP();

@@ -33,6 +33,10 @@
         />
         <link rel="stylesheet" href="style.css" />
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
         <!-- Bootstrap CSS v5.2.1 -->
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -82,15 +86,18 @@
                     </div>
                 <?php } ?>
                 <div class="container d-flex justify-content-center my-4">
-                    <h1>Article <?php echo $id; ?></h1>
+                    <h1 class="site-header">Article <?php echo $id; ?></h1>
                 </div>
                 <form action="update.php" method="post" class="d-flex flex-column justify-content-center gap-4">
                     <input type="hidden" name="article_id" value="<?php echo $id; ?>">
                     <?php
                         $article = $db->get_results("SELECT * FROM articles WHERE id = $id")[0];
-                        echo "<h2>{$article->title}</h2>";
-                        echo "<textarea name='text' rows='30'>{$article->text}</textarea>";
+                        echo "<h2 class='article-title'>{$article->title}</h2>";
                     ?>
+                    <div class="form-floating">
+                        <textarea class="form-control" name="text" style="height: 600px"><?php echo $article->text; ?></textarea>
+                        <label for="text">Article</label>
+                    </div>
                     <div>
                     <button type="submit" class="btn btn-warning w-25"><ion-icon name="create-outline"></ion-icon></button>
                     <a href="delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger w-25"><ion-icon name="trash-outline"></ion-icon></a>

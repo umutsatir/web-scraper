@@ -1,5 +1,5 @@
 <?php
-include './db.php';
+include dirname(dirname(__FILE__)) . '/db.php';
 include 'scraper.php';
 include 'gpt-detector.php';
 
@@ -23,8 +23,9 @@ do {
         }
         $url = $query[0]->url;
         $sitemapId = $query[0]->sitemapId;
-        $db->query("UPDATE links SET status = 2 WHERE url = $url AND sitemapId = $sitemapId");
-
+        $linkId = $query[0]->linkId;
+        $db->query("UPDATE links SET status = 2 WHERE url = '$url' AND sitemapId = $sitemapId");
+        
         $sitemap = $db->get_row("SELECT * FROM sitemaps WHERE sitemapId = $sitemapId");
         $scraper->title_xpath = $sitemap->titleXPath;
         $scraper->article_xpath = $sitemap->textXPath;
@@ -34,11 +35,12 @@ do {
         $result = round($result, 2);
         $date = date('Y-m-d');
         if ($result < $sitemap->threshold) {
-            $db->query("INSERT INTO articles (sitemapId, title, text, gptPercentage, creationDate) VALUES ($sitemapId, $texts[0], $texts[1], $result, $date)");
+            $db->query("INSERT INTO articles (sitemapId, title, text, gptPercentage, creationDate) VALUES ($sitemapId, '$texts[0]', '$texts[1]', $result, '$date')");
         }
-        $db->query("UPDATE links SET status = 1 WHERE url = $url AND sitemapId = $sitemapId");
+        $db->query("UPDATE links SET status = 1 WHERE url = '$url' AND sitemapId = $sitemapId");
     } catch (Exception $e) {
-        $db->query("UPDATE links SET status = -1 WHERE url = $url AND sitemapId = $sitemapId");
+        $db->query("UPDATE links SET status = -1 WHERE url = '$url' AND sitemapId = $sitemapId");
+        echo "Error: sitemapId=$sitemapId linkId=$linkId, Message: {$e->getMessage()}\n";
     }
 } while ($url != null);
 ?>
