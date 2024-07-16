@@ -1,6 +1,10 @@
 <?php
     include './db.php';
+    include 'gump.class.php';
     session_start();
+
+    $gump = new GUMP();
+    $_POST = $gump->sanitize($_POST);
 
     // Get username and password from the form
     $username = $_POST['username'];

@@ -59,7 +59,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </nav>
         </header>
         <main>
-            <div class="container w-75 justify-content-center">
+            <div class="container w-100 justify-content-center">
                 <?php if (isset($_GET['result'])) { ?>
                     <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'warning' : 'danger'; ?> m-3" role="alert">
                         <?php 

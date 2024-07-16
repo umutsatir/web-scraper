@@ -15,6 +15,10 @@
     } catch (Exception $e) {
         header('Location: view.php?result=error');
     }
+
+    include 'gump.class.php';
+    $gump = new GUMP();
+    $_GET = $gump->sanitize($_GET);
 ?>
 
 <!DOCTYPE html>

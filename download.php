@@ -1,8 +1,11 @@
 <?php
     include './db.php';
+    include 'gump.class.php';
     session_start();
 
     $db = (new DB())->connect();
+    $gump = new GUMP();
+    $_GET = $gump->sanitize($_GET);
 
     try {
         $directory = __DIR__ . '/downloaded-files/';

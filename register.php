@@ -1,7 +1,11 @@
 <?php
     include './db.php';
     include './pdo.php';
+    include "gump.class.php";
     session_start();
+
+    $gump = new GUMP();
+    $_POST = $gump->sanitize($_POST);
 
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);

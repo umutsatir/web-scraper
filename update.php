@@ -1,7 +1,11 @@
 <?php
     include './db.php';
     include './pdo.php';
+    include "gump.class.php";
     session_start();
+
+    $gump = new GUMP();
+    $_POST = $gump->sanitize($_POST);
     
     try {
         $article_id = $_POST['article_id'];

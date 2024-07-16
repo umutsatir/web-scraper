@@ -6,6 +6,25 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: login.php');
     exit;
 }
+
+if (!isset($_SESSION['last_submission'])) {
+    $_SESSION['last_submission'] = time();
+    $_SESSION['submission_count'] = 0;
+}
+
+$submission_interval = 60; // 60 seconds
+$submission_limit = 5; // limit to 5 submissions per interval
+
+if (time() - $_SESSION['last_submission'] < $submission_interval) {
+    $_SESSION['submission_count']++;
+} else {
+    $_SESSION['submission_count'] = 1;
+    $_SESSION['last_submission'] = time();
+}
+
+if ($_SESSION['submission_count'] > $submission_limit) {
+    die('Rate limit exceeded');
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,13 +38,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <link rel="stylesheet" href="./style.css" />
-
+        
         <!-- Bootstrap CSS v5.2.1 -->
         <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
         />
     </head>
 
@@ -58,7 +77,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <div class="container d-flex justify-content-center mt-5">
                 <h1>Scraper Tool</h1>
             </div>
-            <div class="container w-50 justify-content-center">
+            <div class="container w-75 justify-content-center">
                 <form action="./scrape/main.php" method="get">
                     <div class="input-group m-3">
                         <label for="sitemapLink" class="input-group-text"

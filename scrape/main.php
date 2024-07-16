@@ -8,6 +8,10 @@ include './scraper.php';
 include './gpt-detector.php';
 include '../db.php';
 include '../pdo.php';
+include 'gump.class.php';
+
+$gump = new GUMP();
+$_GET = $gump->sanitize($_GET);
 
 try {
     $url = $_GET['sitemapLink']; 

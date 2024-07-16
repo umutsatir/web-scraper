@@ -12,6 +12,7 @@ class ComposerStaticInit229a155f576c25235559e6ec739ae6cc
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '8fa1aa8cac6a43024fcfc5386df20ced' => __DIR__ . '/..' . '/ezsql/ezsql/lib/Constants.php',
         'b8b48b5f3b620f647efc2110a0a0e913' => __DIR__ . '/..' . '/ezsql/ezsql/lib/ezFunctions.php',
+        'da253f61703e9c22a5a34f228526f05a' => __DIR__ . '/..' . '/wixel/gump/gump.class.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -33,6 +34,7 @@ class ComposerStaticInit229a155f576c25235559e6ec739ae6cc
         'G' => 
         array (
             'GrahamCampbell\\ResultType\\' => 26,
+            'GUMP\\' => 5,
         ),
         'D' => 
         array (
@@ -68,6 +70,10 @@ class ComposerStaticInit229a155f576c25235559e6ec739ae6cc
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'GUMP\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wixel/gump/src',
         ),
         'Dotenv\\' => 
         array (

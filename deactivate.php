@@ -1,7 +1,11 @@
 <?php
     include './db.php';
     include './pdo.php';
+    include "gump.class.php";
     session_start();
+
+    $gump = new GUMP();
+    $_GET = $gump->sanitize($_GET);
     
     try {
         $sitemapId = $_GET['sitemapId'];

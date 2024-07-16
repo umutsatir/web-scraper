@@ -1,6 +1,10 @@
 <?php
     session_start();
     include './db.php';
+    include 'gump.class.php';
+
+    $gump = new GUMP();
+    $_GET = $gump->sanitize($_GET);
 
     // Check if the user is logged in
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
