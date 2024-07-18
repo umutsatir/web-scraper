@@ -1,6 +1,6 @@
 <?php
 session_start();
-include './db.php';
+include 'inc/db.php';
 $db = (new DB())->connect();
 $username = $_SESSION['username'];
 $userId = $db->get_var("SELECT userId FROM users WHERE username = '{$username}'");
@@ -61,7 +61,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                             <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
                             <button class="btn btn-secondary">Profile</button>
                         </form>
-                        <form action="logout.php" class="mx-2">
+                        <form action="inc/logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>
@@ -114,8 +114,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                                 <td>
                                     <div class="container d-flex gap-1">
                                         <a href="view.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
-                                        <a href="deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-danger"><ion-icon name="stop-circle-outline"></ion-icon></a>
-                                        <a href="download.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-success"><ion-icon name="download-outline"></ion-icon></a>
+                                        <a href="inc/deactivate.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-danger"><ion-icon name="stop-circle-outline"></ion-icon></a>
+                                        <a href="inc/download.php?sitemapId=<?php echo $sitemap->sitemapId; ?>" class="btn btn-success"><ion-icon name="download-outline"></ion-icon></a>
                                     </div>
                                 </td>
                             </tr>

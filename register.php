@@ -56,7 +56,7 @@
                 <h1>User Register</h1>
             </div>
             <div class="container w-50">
-                <form action="./register-req.php" method="post">
+                <form action="inc/register-req.php" method="post">
                     <div class="input-group m-3">
                         <label for="username" class="input-group-text"
                             >Username</label

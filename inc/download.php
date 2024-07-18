@@ -8,7 +8,7 @@
     $_GET = $gump->sanitize($_GET);
 
     try {
-        $directory = __DIR__ . '/downloaded-files/';
+        $directory = dirname(__DIR__) . '/downloaded-files/';
         $sitemapId = $_GET['sitemapId'];
         $zipFile = $directory . "batch-articles-" . $sitemapId . '.zip';
         $files = [];
@@ -57,7 +57,7 @@
         foreach ($files as $file)
             unlink($file);
     } catch (Exception $e) {
-        header('Location: scrapings.php?result=error');
-        error_log('Error: ' . $e->getMessage() . "\n", 3, 'logs/download.log');
+        header('Location: ../scrapings.php?result=error');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/download.log');
     }
 ?>

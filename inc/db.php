@@ -1,8 +1,8 @@
 <?php
-    require 'vendor/autoload.php';
-
+    $dir = dirname(__DIR__);
+    require $dir . '/vendor/autoload.php';
     use ezsql\Database;
-    $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv = \Dotenv\Dotenv::createImmutable($dir);
     $dotenv->load();
     
     class DB {
@@ -13,10 +13,10 @@
         private $db_host;
 
         public function __construct() {
-            $this-> db_name = $_SERVER['DB_NAME'];
-            $this-> db_user = $_SERVER['DB_USER'];
-            $this-> db_pass = $_SERVER['DB_PASS'];
-            $this-> db_host = $_SERVER['DB_HOST'];
+            $this-> db_name = $_ENV['DB_NAME'];
+            $this-> db_user = $_ENV['DB_USER'];
+            $this-> db_pass = $_ENV['DB_PASS'];
+            $this-> db_host = $_ENV['DB_HOST'];
         }
 
         public function connect() {

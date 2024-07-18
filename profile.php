@@ -7,8 +7,8 @@
         exit;
     }
 
-    include './db.php';
-    include './pdo.php';
+    include 'inc/db.php';
+    include 'inc/pdo.php';
 
     $db = (new DB())->connect();
     $pdo = (new PDOClass())->connect();
@@ -65,7 +65,7 @@
                             <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
                             <button class="btn btn-secondary">Profile</button>
                         </form>
-                        <form action="logout.php" class="mx-2">
+                        <form action="inc/logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>
@@ -91,7 +91,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title">User Information</h3>
-                                <form action="change.php" method="post">
+                                <form action="inc/change.php" method="post">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -141,7 +141,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title mb-4">Update Password</h3>
-                                <form action="change-pw.php" method="post">
+                                <form action="inc/change-pw.php" method="post">
                                     <div class="container d-flex flex-column gap-3 my-3">
                                         <div class="form-floating">
                                             <input type="password" class="form-control" name="oldPassword" placeholder="Old Password" required>

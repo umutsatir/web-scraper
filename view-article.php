@@ -1,5 +1,5 @@
 <?php
-    include './db.php';
+    include 'inc/db.php';
     session_start();
 
     // Check if the user is logged in
@@ -70,7 +70,7 @@
                             <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
                             <button class="btn btn-secondary">Profile</button>
                         </form>
-                        <form action="logout.php" class="mx-2">
+                        <form action="inc/logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>
@@ -94,7 +94,7 @@
                 <div class="container d-flex justify-content-center mb-4 mt-5">
                     <h1 class="site-header">Article <?php echo $id; ?></h1>
                 </div>
-                <form action="update.php" method="post" class="d-flex flex-column justify-content-center gap-4">
+                <form action="./inc/update.php" method="post" class="d-flex flex-column justify-content-center gap-4">
                     <input type="hidden" name="article_id" value="<?php echo $id; ?>">
                     <?php
                         $article = $db->get_results("SELECT * FROM articles WHERE id = $id")[0];
@@ -106,7 +106,7 @@
                     </div>
                     <div>
                     <button type="submit" class="btn btn-warning w-25"><ion-icon name="create-outline"></ion-icon></button>
-                    <a href="delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger w-25"><ion-icon name="trash-outline"></ion-icon></a>
+                    <a href="inc/delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger w-25"><ion-icon name="trash-outline"></ion-icon></a>
                     </div>
                 </form>
             </div>

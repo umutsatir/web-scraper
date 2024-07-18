@@ -1,5 +1,5 @@
 <?php
-include './db.php';
+include 'inc/db.php';
 
 session_start();
 
@@ -78,7 +78,7 @@ $totalLinks = $db->get_var("SELECT COUNT(*) FROM links");
                             <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
                             <button class="btn btn-secondary">Profile</button>
                         </form>
-                        <form action="logout.php" class="mx-2">
+                        <form action="inc/logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>

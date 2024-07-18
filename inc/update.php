@@ -14,8 +14,9 @@
         $pdo = (new PDOClass())->connect();
         $sql = $pdo->prepare("UPDATE articles SET text = :text WHERE id = :id");
         $sql->execute(['text' => $text, 'id' => $article_id]);
-        header('Location: view-article.php?article_id=' . $article_id . '&result=success&process=update');
+        header('Location: ../view-article.php?article_id=' . $article_id . '&result=success&process=update');
     } catch (Exception $e) {
-        header('Location: view-article.php?article_id=' . $article_id . '&result=error');
+        header('Location: ../view-article.php?article_id=' . $article_id . '&result=error');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/update.log');
     }
 ?>

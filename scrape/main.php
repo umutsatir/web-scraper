@@ -6,8 +6,8 @@ session_start();
 
 include './scraper.php';
 include './gpt-detector.php';
-include '../db.php';
-include '../pdo.php';
+include '../inc/db.php';
+include '../inc/pdo.php';
 include 'gump.class.php';
 
 $gump = new GUMP();

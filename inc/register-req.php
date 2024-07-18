@@ -18,8 +18,8 @@
             throw new Exception("Invalid email");
         }
     
-        $usernameExists = $pdo->prepare("SELECT * FROM users WHERE username = :username")->execute(['username' => $username]);
-        $emailExists = $pdo->prepare("SELECT * FROM users WHERE email = :email")->execute(['email' => $email]);
+        $usernameExists = $db->get_results("SELECT * FROM users WHERE username = '$username'");
+        $emailExists = $db->get_results("SELECT * FROM users WHERE email = '$email'");
         if ($usernameExists || $emailExists) {
             throw new Exception("Username or email already exists");
         }
@@ -27,9 +27,9 @@
         $insertion->execute(['username' => $username, 'password' => $password, 'email' => $email]);
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;
-        header('Location: index.php');
+        header('Location: ../index.php');
     } catch (Exception $e) {
-        header('Location: register.php?result=error&message=' . $e->getMessage());
-        error_log('Error: ' . $e->getMessage() . "\n", 3, __DIR__ . '/logs/register.log');
+        header('Location: ../register.php?result=error&message=' . $e->getMessage());
+        error_log('Error: ' . $e->getMessage() . "\n", 3, dirname(__DIR__) . '/logs/register.log');
     }
 ?>

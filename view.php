@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include './db.php';
+    include 'inc/db.php';
     include 'gump.class.php';
 
     $gump = new GUMP();
@@ -71,7 +71,7 @@
                             <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
                             <button class="btn btn-secondary">Profile</button>
                         </form>
-                        <form action="logout.php" class="mx-2">
+                        <form action="inc/logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>
@@ -120,7 +120,7 @@
                                 <td>
                                     <div class="container d-flex flex-column gap-1">
                                         <a href="view-article.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-primary"><ion-icon name="eye-outline"></ion-icon></a>
-                                        <a href="delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger"><ion-icon name="trash-outline"></ion-icon></a>
+                                        <a href="inc/delete.php?sitemapId=<?php echo $article->sitemapId ?>&article_id=<?php echo $article->id; ?>" class="btn btn-danger"><ion-icon name="trash-outline"></ion-icon></a>
                                     </div>
                                 </td>
                             </tr>

@@ -18,9 +18,9 @@
 
         $query = $pdo->prepare("UPDATE users SET name = :name, surname = :surname, email = :email WHERE username = :username");
         $query->execute(['name' => $_POST['name'], 'surname' => $_POST['surname'], 'email' => $_POST['email'], 'username' => $_SESSION['username']]);
-        header('Location: profile.php?result=success');
+        header('Location: ../profile.php?result=success');
     } catch (Exception $e) {
-        header('Location: profile.php?result=error&message=' . $e->getMessage());
-        error_log('Error: ' . $e->getMessage() . "\n", 3, 'logs/profile.log');
+        header('Location: ../profile.php?result=error&message=' . $e->getMessage());
+        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/profile.log');
     }
 ?>

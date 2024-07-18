@@ -13,9 +13,9 @@
         $pdo = (new PDOClass())->connect();
         $update = $pdo->prepare("UPDATE links SET status = -1 WHERE sitemapId = :sitemapId");
         $update->execute(['sitemapId' => $sitemapId]);
-        header('Location: scrapings.php?result=success&sitemapId=' . $sitemapId . '&process=deactivate');
+        header('Location: ../scrapings.php?result=success&sitemapId=' . $sitemapId . '&process=deactivate');
     } catch (Exception $e) {
-        header('Location: scrapings.php?result=error');
-        error_log('Error: ' . $e->getMessage() . "\n", 3, 'logs/deactivate.log');
+        header('Location: ../scrapings.php?result=error');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/deactivate.log');
     }
 ?>
