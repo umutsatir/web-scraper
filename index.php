@@ -20,6 +20,7 @@ foreach ($mySitemaps as $sitemap) {
 $totalSitemapCount = $db->get_var("SELECT COUNT(*) FROM sitemaps");
 $totalArticleCount = $db->get_var("SELECT COUNT(*) FROM articles");
 $totalUsers = $db->get_var("SELECT COUNT(*) FROM users");
+$totalLinks = $db->get_var("SELECT COUNT(*) FROM links");
 ?>
 
 <!DOCTYPE html>
@@ -107,6 +108,13 @@ $totalUsers = $db->get_var("SELECT COUNT(*) FROM users");
                 </div>
             </div>
             <div class="row gap-4">
+                <div class="col card text-center">
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $totalLinks; ?></h2>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Scraped Links</h6>
+                        <p class="card-text">Total number of links that have been scraped.</p>
+                    </div>
+                </div>
                 <div class="col card text-center">
                     <div class="card-body">
                         <h1 class="card-title"><?php echo $totalArticleCount; ?></h2>
