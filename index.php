@@ -12,11 +12,17 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 $db = (new DB())->connect();
 $userId = $db->get_var("SELECT userId FROM users WHERE username = '{$_SESSION['username']}'");
 $mySitemaps = $db->get_results("SELECT * FROM sitemaps WHERE userId = $userId");
-$mySitemapCount = count($mySitemaps);
+$mySitemapCount = 0;
+if ($mySitemaps != null)
+    $mySitemapCount = count($mySitemaps);
+
 $myArticleCount = 0;
-foreach ($mySitemaps as $sitemap) {
-    $myArticleCount += $db->get_var("SELECT COUNT(*) FROM articles WHERE sitemapId = $sitemap->userId");
+if ($mySitemapCount != 0) {
+    foreach ($mySitemaps as $sitemap) {
+        $myArticleCount += $db->get_var("SELECT COUNT(*) FROM articles WHERE sitemapId = $sitemap->userId");
+    }
 }
+
 $totalSitemapCount = $db->get_var("SELECT COUNT(*) FROM sitemaps");
 $totalArticleCount = $db->get_var("SELECT COUNT(*) FROM articles");
 $totalUsers = $db->get_var("SELECT COUNT(*) FROM users");
