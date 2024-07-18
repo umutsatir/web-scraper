@@ -16,6 +16,6 @@
         header('Location: scrapings.php?result=success&sitemapId=' . $sitemapId . '&process=deactivate');
     } catch (Exception $e) {
         header('Location: scrapings.php?result=error');
-        error_log('Error: ' . $e->getMessage(), 3, 'logs/deactivate.log');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, 'logs/deactivate.log');
     }
 ?>

@@ -58,14 +58,20 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="index.php">Scraper</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="scrapings.php">My Scrapings</a>
                         </li>
                     </ul>
-                        <form action="logout.php">
-                            <label class="mx-3"><?php echo "Hello, " ?> <strong><?php echo $_SESSION['username']; ?></strong></label>
+                        <form action="profile.php">
+                            <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
+                            <button class="btn btn-secondary">Profile</button>
+                        </form>
+                        <form action="logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>
@@ -73,7 +79,7 @@
             </nav>
         </header>
         <main>
-            <div class="container w-75 justify-content-center">
+            <div class="justify-content-center mx-5">
                 <?php if (isset($_GET['result'])) { ?>
                     <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'warning' : 'danger'; ?> m-3" role="alert">
                         <?php 

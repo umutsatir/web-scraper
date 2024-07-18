@@ -1,4 +1,6 @@
 <?php
+include './db.php';
+
 session_start();
 
 // Check if the user is logged in
@@ -7,24 +9,17 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-if (!isset($_SESSION['last_submission'])) {
-    $_SESSION['last_submission'] = time();
-    $_SESSION['submission_count'] = 0;
+$db = (new DB())->connect();
+$userId = $db->get_var("SELECT userId FROM users WHERE username = '{$_SESSION['username']}'");
+$mySitemaps = $db->get_results("SELECT * FROM sitemaps WHERE userId = $userId");
+$mySitemapCount = count($mySitemaps);
+$myArticleCount = 0;
+foreach ($mySitemaps as $sitemap) {
+    $myArticleCount += $db->get_var("SELECT COUNT(*) FROM articles WHERE sitemapId = $sitemap->userId");
 }
-
-$submission_interval = 30;
-$submission_limit = 5;
-
-if (time() - $_SESSION['last_submission'] < $submission_interval) {
-    $_SESSION['submission_count']++;
-} else {
-    $_SESSION['submission_count'] = 1;
-    $_SESSION['last_submission'] = time();
-}
-
-if ($_SESSION['submission_count'] > $submission_limit) {
-    die('Rate limit exceeded, wait for ' . ($submission_interval - (time() - $_SESSION['last_submission'])) . ' seconds before submitting again.');
-}
+$totalSitemapCount = $db->get_var("SELECT COUNT(*) FROM sitemaps");
+$totalArticleCount = $db->get_var("SELECT COUNT(*) FROM articles");
+$totalUsers = $db->get_var("SELECT COUNT(*) FROM users");
 ?>
 
 <!DOCTYPE html>
@@ -63,86 +58,72 @@ if ($_SESSION['submission_count'] > $submission_limit) {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Scraper</a>
+                            <a class="nav-link active" aria-current="page" href="">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="scraper.php">Scraper</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="scrapings.php">My Scrapings</a>
                         </li>
                     </ul>
-                        <form action="logout.php">
-                            <label class="mx-3"><?php echo "Hello, " ?> <strong><?php echo $_SESSION['username']; ?></strong></label>
+                        <form action="profile.php">
+                            <label class="mx-2">Hello, <strong><?php echo $_SESSION['username']; ?></strong></label>
+                            <button class="btn btn-secondary">Profile</button>
+                        </form>
+                        <form action="logout.php" class="mx-2">
                             <button class="btn btn-primary">Logout</button>
                         </form>
                     </div>
                 </div>
             </nav>
         </header>
-        <main>
-            <div class="container d-flex justify-content-center mt-5">
-                <h1 class="site-header">Scraper Tool</h1>
+        <main class="d-flex flex-column justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center m-5">
+            <h1>Scraper Stats</h1>
+        </div>
+        <div class="d-grid gap-4 justify-content-center align align-items-center m-4 w-75">
+            <div class="row gap-4">
+                <div class="col card text-center">
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $mySitemapCount; ?></h2>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Your Scraped Sitemaps</h6>
+                        <p class="card-text">Total number of sitemaps that you have been scraped.</p>
+                    </div>
+                </div>
+                <div class="col card text-center">
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $myArticleCount; ?></h2>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Your Articles</h6>
+                        <p class="card-text">Total number of articles that you have been scraped.</p>
+                    </div>
+                </div>
+                <div class="col card text-center">
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $totalSitemapCount; ?></h2>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Scraped Sitemaps</h6>
+                        <p class="card-text">Total number of sitemaps that have been scraped.</p>
+                    </div>
+                </div>
             </div>
-            <div class="container w-75 justify-content-center">
-                <form action="./scrape/main.php" method="get">
-                    <div class="input-group m-3">
-                        <label for="sitemapLink" class="input-group-text"
-                            >Sitemap Link</label
-                        >
-                        <input
-                            type="link"
-                            class="form-control"
-                            name="sitemapLink"
-                            placeholder="https://www.example.com"
-                            required
-                        />
+            <div class="row gap-4">
+                <div class="col card text-center">
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $totalArticleCount; ?></h2>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Articles</h6>
+                        <p class="card-text">Total number of articles that have been scraped.</p>
                     </div>
-                    <div class="input-group m-3">
-                        <label for="titleXPath" class="input-group-text"
-                            >Title XPath</label
-                        >
-                        <input
-                            type="text"
-                            name="titleXPath"
-                            class="form-control"
-                            required
-                        />
+                </div>
+                <div class="col card text-center">
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $totalUsers; ?></h2>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Users</h6>
+                        <p class="card-text">Total number of users that have been used XON web scraper tool.</p>
                     </div>
-                    <div class="input-group m-3">
-                        <label for="textXPath" class="input-group-text"
-                            >Text XPath</label
-                        >
-                        <input
-                            type="text"
-                            name="textXPath"
-                            class="form-control"
-                            required
-                        />
-                    </div>
-                    <div class="input-group m-3">
-                        <label for="threshold" class="form-label">GPT Threshold</label>
-                        <input type="range" class="form-range" min="0" max="100" name="threshold">
-                        <p id="thresholdValue"></p>
-                    </div>
-                    <div class="m-3 w-100">
-                        <label for="tag-input1" class="form-label">Filters (if not, leave blank)</label>
-                        <input type="text" id="tag-input1" name="filters" class="w-100">
-                    </div>
-                    <input type="submit" class="btn btn-primary mx-3" />
-                </form>
-                <?php if (isset($_GET['result'])) { ?>
-                    <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'success' : 'danger'; ?> m-3" role="alert">
-                        <?php echo $_GET['result'] == 'success' ? 'Sitemap has been successfully added to the scraping queue. You can check the results in the <a href="./scrapings.php" class="alert-link">"My Scrapings"</a> tab.' : 'An error occurred. Please try again later.'; ?>
-                    </div>
-                <?php } ?>
+                </div>
             </div>
+        </div>
         </main>
-        <script>
-            var text = document.getElementById('thresholdValue');
-            var threshold = document.querySelector('.form-range');
-            text.innerText = threshold.valueAsNumber + "%"; 
-            threshold.addEventListener('change', () => { 
-                text.innerText = threshold.valueAsNumber + "%"; 
-            });
-        </script>
         <footer>
             <!-- place footer here -->
         </footer>

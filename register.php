@@ -37,6 +37,6 @@
         header('Location: index.php');
     } catch (Exception $e) {
         echo 'Error: ' . $e->getMessage();
-        error_log('Error: ' . $e->getMessage(), 3, __DIR__ . '/logs/register.log');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, __DIR__ . '/logs/register.log');
     }
 ?>

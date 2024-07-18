@@ -57,7 +57,7 @@ try {
     header("Location: ../index.php?result=success");
 } catch (Exception $e) {
     header("Location: ../index.php?result=error");
-    error_log('Error: ' . $e->getMessage(), 3, '../logs/index.log');
+    error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/index.log');
 
     $deleteSitemap = $pdo->prepare("DELETE FROM sitemaps WHERE sitemapId = :sitemapId");
     $deleteSitemap->execute(['sitemapId' => $sitemap_id]);

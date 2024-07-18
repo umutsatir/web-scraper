@@ -58,6 +58,6 @@
             unlink($file);
     } catch (Exception $e) {
         header('Location: scrapings.php?result=error');
-        error_log('Error: ' . $e->getMessage(), 3, 'logs/download.log');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, 'logs/download.log');
     }
 ?>

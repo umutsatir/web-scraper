@@ -17,6 +17,6 @@
         header('Location: view.php?sitemapId=' . $sitemapId . '&result=success&article_id=' . $id . '&process=delete');
     } catch (Exception $e) {
         header('Location: view.php?sitemapId=' . $sitemapId . '&result=error');
-        error_log('Error: ' . $e->getMessage(), 3, 'logs/delete.log');
+        error_log('Error: ' . $e->getMessage() . "\n", 3, 'logs/delete.log');
     }
 ?>
