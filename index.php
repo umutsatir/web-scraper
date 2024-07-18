@@ -80,57 +80,65 @@ $totalLinks = $db->get_var("SELECT COUNT(*) FROM links");
             </nav>
         </header>
         <main class="d-flex flex-column justify-content-center align-items-center">
-        <div class="d-flex justify-content-center align-items-center m-5">
-            <h1>Scraper Stats</h1>
-        </div>
-        <div class="d-grid gap-4 justify-content-center align align-items-center m-4 w-75">
-            <div class="row gap-4">
-                <div class="col card text-center">
-                    <div class="card-body">
-                        <h1 class="card-title"><?php echo $mySitemapCount; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Your Scraped Sitemaps</h6>
-                        <p class="card-text">Total number of sitemaps that you have been scraped.</p>
+            <div class="d-flex justify-content-center align-items-center mt-5 mb-3">
+                <h1>Scraper Stats</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-4 justify-content-center align-items-stretch m-4 w-75">
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-2 d-flex">
+                    <div class="card text-center w-100">
+                        <div class="card-body">
+                            <h1 class="card-title"><?php echo $mySitemapCount; ?></h1>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Your Scraped Sitemaps</h6>
+                            <p class="card-text">Total number of sitemaps that you have been scraped.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col card text-center">
-                    <div class="card-body">
-                        <h1 class="card-title"><?php echo $myArticleCount; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Your Articles</h6>
-                        <p class="card-text">Total number of articles that you have been scraped.</p>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-2 d-flex">
+                    <div class="card text-center w-100">
+                        <div class="card-body">
+                            <h1 class="card-title"><?php echo $myArticleCount; ?></h1>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Your Articles</h6>
+                            <p class="card-text">Total number of articles that you have been scraped.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col card text-center">
-                    <div class="card-body">
-                        <h1 class="card-title"><?php echo $totalSitemapCount; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Scraped Sitemaps</h6>
-                        <p class="card-text">Total number of sitemaps that have been scraped.</p>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-2 d-flex">
+                    <div class="card text-center w-100">
+                        <div class="card-body">
+                            <h1 class="card-title"><?php echo $totalSitemapCount; ?></h1>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Total Scraped Sitemaps</h6>
+                            <p class="card-text">Total number of sitemaps that have been scraped.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-2 d-flex">
+                    <div class="card text-center w-100">
+                        <div class="card-body">
+                            <h1 class="card-title"><?php echo $totalLinks; ?></h1>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Total Scraped Links</h6>
+                            <p class="card-text">Total number of links that have been scraped.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-2 d-flex">
+                    <div class="card text-center w-100">
+                        <div class="card-body">
+                            <h1 class="card-title"><?php echo $totalArticleCount; ?></h1>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Total Articles</h6>
+                            <p class="card-text">Total number of articles that have been scraped.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-2 d-flex">
+                    <div class="card text-center w-100">
+                        <div class="card-body">
+                            <h1 class="card-title"><?php echo $totalUsers; ?></h1>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Total Users</h6>
+                            <p class="card-text">Total number of users that have been used XON web scraper tool.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row gap-4">
-                <div class="col card text-center">
-                    <div class="card-body">
-                        <h1 class="card-title"><?php echo $totalLinks; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Scraped Links</h6>
-                        <p class="card-text">Total number of links that have been scraped.</p>
-                    </div>
-                </div>
-                <div class="col card text-center">
-                    <div class="card-body">
-                        <h1 class="card-title"><?php echo $totalArticleCount; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Articles</h6>
-                        <p class="card-text">Total number of articles that have been scraped.</p>
-                    </div>
-                </div>
-                <div class="col card text-center">
-                    <div class="card-body">
-                        <h1 class="card-title"><?php echo $totalUsers; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Total Users</h6>
-                        <p class="card-text">Total number of users that have been used XON web scraper tool.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
         </main>
         <footer>
             <!-- place footer here -->
@@ -147,7 +155,5 @@ $totalLinks = $db->get_var("SELECT COUNT(*) FROM links");
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
-
-        <script src="./bootstrap-tagsinput.js"></script>
     </body>
 </html>
