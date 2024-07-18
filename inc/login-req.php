@@ -22,7 +22,7 @@
         }
     } catch (Exception $e) {
         header('Location: ../login.php?result=error&message=' . $e->getMessage());
-        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/login.log');
+        error_log('Error: ' . $e->getMessage() . $username . "\n", 3, '../logs/login.log');
         echo $e->getMessage();
     }
 ?>

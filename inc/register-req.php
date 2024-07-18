@@ -30,6 +30,6 @@
         header('Location: ../index.php');
     } catch (Exception $e) {
         header('Location: ../register.php?result=error&message=' . $e->getMessage());
-        error_log('Error: ' . $e->getMessage() . "\n", 3, dirname(__DIR__) . '/logs/register.log');
+        error_log('Error: ' . $e->getMessage() . $username . "\n", 3, dirname(__DIR__) . '/logs/register.log');
     }
 ?>

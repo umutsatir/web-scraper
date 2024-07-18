@@ -21,6 +21,6 @@
         header('Location: ../profile.php?result=success');
     } catch (Exception $e) {
         header('Location: ../profile.php?result=error&message=' . $e->getMessage());
-        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/profile.log');
+        error_log('Error: ' . $e->getMessage() . $_SESSION['username'] . "\n", 3, '../logs/profile.log');
     }
 ?>

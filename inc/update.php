@@ -17,6 +17,6 @@
         header('Location: ../view-article.php?article_id=' . $article_id . '&result=success&process=update');
     } catch (Exception $e) {
         header('Location: ../view-article.php?article_id=' . $article_id . '&result=error');
-        error_log('Error: ' . $e->getMessage() . "\n", 3, '../logs/update.log');
+        error_log('Error: ' . $e->getMessage() . $_SESSION['username'] . "\n", 3, '../logs/update.log');
     }
 ?>
