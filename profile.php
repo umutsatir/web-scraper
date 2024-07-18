@@ -76,8 +76,14 @@
             <div class="container">
                 <?php if (isset($_GET['result'])) { ?>
                         <div class="alert alert-<?php echo $_GET['result'] == 'success' ? 'success' : 'danger'; ?> m-3" role="alert">
-                            <?php echo $_GET['result'] == 'success' ? 'Data successfully updated.' : 'An error occurred, please try again.'; ?>
-                        </div>
+                            <?php
+                                if (isset($_GET['process']) && $_GET['process'] == 'change-pw') {
+                                    echo $_GET['result'] == 'success' ? 'Password successfully updated.' : 'Error: ' . $_GET['message'];
+                                } else {
+                                echo $_GET['result'] == 'success' ? 'Data successfully updated.' : 'Error: ' . $_GET['message'];
+                                }
+                                ?>
+                            <?php echo '</div>'; ?>
                     <?php } ?>
                 <div class="container-fluid mb-5">
                     <div class="col-md-6 offset-md-3 d-flex flex-column gap-5">
