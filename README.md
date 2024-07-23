@@ -2,9 +2,9 @@
 
 This is a web scraper project that can scrape all articles or blog texts from the website's sitemap. Users can create an account and scrape articles from anywhere. Also users can see the list of all scrapings that they requested. 
 
-Texts can be downloaded in a zip file. Also users can list and edit the contents. 
+Texts can be downloaded in a zip file. Also users can list and edit the contents. All data stored in MySQL database.
 
-All data stored in MySQL database.
+This project is created for the summer internship.
 
 ## Deployment
 
